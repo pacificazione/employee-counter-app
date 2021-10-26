@@ -2,6 +2,9 @@
 
 use yii\db\Migration;
 
+/**
+ * Миграция сотрудника.
+ */
 class m130524_201442_init extends Migration
 {
     public function up()
@@ -12,22 +15,30 @@ class m130524_201442_init extends Migration
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
-        $this->createTable('{{%user}}', [
+        $this->createTable('{{%employee}}', [
             'id' => $this->primaryKey(),
-            'username' => $this->string()->notNull()->unique(),
+            'firstName' => $this->string()->notNull()->comment('Имя'),
+            'lastName' => $this->string()->notNull()->comment('Фамилия'),
+            'education' => $this->string()->comment('Образование'),
+            'post' => $this->string()->notNull()->comment('Должность'),
+            'age'=> $this->integer()->notNull()->comment('Возраст'),
+            'nationality' => $this->string()->notNull()->comment('Гражданство'),
             'auth_key' => $this->string(32)->notNull(),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
+            'verification_token' => $this->string()->defaultValue(null),
             'email' => $this->string()->notNull()->unique(),
-
-            'status' => $this->smallInteger()->notNull()->defaultValue(10),
+            'status' => $this->smallInteger()->notNull()->defaultValue(9),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
+
+        $this->addCommentOnTable('{{%employee}}', 'Сотрудник');
     }
+
 
     public function down()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{%employee}}');
     }
 }

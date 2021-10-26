@@ -2,12 +2,14 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap4\ActiveForm */
-/* @var $model \frontend\models\SignupForm */
+/* @var $model SignUpForm */
+/* @var $departmentList array */
 
+use common\models\SignUpForm;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
 
-$this->title = 'Signup';
+$this->title = 'Регистрация';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-signup">
@@ -19,14 +21,26 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'firstName')->textInput(['maxlength' => true]) ?>
 
-                <?= $form->field($model, 'email') ?>
+                <?= $form->field($model, 'lastName')->textInput(['maxlength' => true]) ?>
+
+                <?= $form->field($model, 'departmentId')->dropDownList([0 => 'Выбрать'] + $departmentList)  ?>
+
+                <?= $form->field($model, 'education')->textInput(['maxlength' => true]) ?>
+
+                <?= $form->field($model, 'post')->textInput(['maxlength' => true]) ?>
+
+                <?= $form->field($model, 'age')->textInput() ?>
+
+                <?= $form->field($model, 'nationality')->textInput(['maxlength' => true]) ?>
+
+                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
                 <div class="form-group">
-                    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                    <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
                 </div>
 
             <?php ActiveForm::end(); ?>

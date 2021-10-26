@@ -2,10 +2,19 @@
 
 namespace frontend\controllers;
 
+use common\models\repositories\DepartmentRepository;
+use common\models\repositories\Employee2DepartmentRepository;
+use common\models\services\LoginService;
+use common\models\repositories\EmployeeRepository;
+use common\models\services\SignUpDto;
+use common\models\services\SignUpService;
+use common\models\SignUpForm;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
+use yii\base\Exception;
 use yii\base\InvalidArgumentException;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -13,14 +22,22 @@ use yii\filters\AccessControl;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use yii\web\NotFoundHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    private EmployeeRepository $employeeRepository;
+
+    private LoginService $loginService;
+
+    private SignUpService $signUpService;
+
+    private DepartmentRepository $departmentRepository;
+
     /**
      * {@inheritdoc}
      */
@@ -28,7 +45,7 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'only' => ['logout', 'signup'],
                 'rules' => [
                     [
@@ -44,7 +61,7 @@ class SiteController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
@@ -68,6 +85,21 @@ class SiteController extends Controller
         ];
     }
 
+    public function __construct(
+        $id,
+        $module,
+        EmployeeRepository $employeeRepository,
+        LoginService $loginService,
+        SignUpService $signUpService,
+        DepartmentRepository $departmentRepository
+    ){
+        parent::__construct($id, $module);
+        $this->loginService = $loginService;
+        $this->employeeRepository = $employeeRepository;
+        $this->signUpService = $signUpService;
+        $this->departmentRepository = $departmentRepository;
+    }
+
     /**
      * Displays homepage.
      *
@@ -85,16 +117,29 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $request = Yii::$app->request;
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
 
-        $model->password = '';
+        if ($model->load($request->post())) {
+            $employee = $this->employeeRepository->findByEmail($model->email);
+            $model->setEmployee($employee);
+            $model->validate();
+            //echo '<pre>'; print_r($model->getErrors());exit(0);
+            if($employee === null){
+                throw new NotFoundHttpException('Сотрудник с такой почтой не найден.');
+            }
+
+
+
+            if($this->loginService->login($employee, $model->rememberMe)){
+                return $this->redirect(['/']);
+            }
+        }
 
         return $this->render('login', [
             'model' => $model,
@@ -114,53 +159,42 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        }
-
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
      * Signs user up.
      *
      * @return mixed
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
+        $request = Yii::$app->request;
+        $signUpForm = new SignUpForm();
+        $departmentList = ArrayHelper::map($this->departmentRepository->getList(), 'id', 'departmentName');
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            if ($signUpForm->load($request->post()) && $signUpForm->validate()) {
+                $signUpDto = new SignUpDto(
+                    $signUpForm->firstName,
+                    $signUpForm->lastName,
+                    $signUpForm->education,
+                    $signUpForm->post,
+                    $signUpForm->age,
+                    $signUpForm->nationality,
+                    $signUpForm->email,
+                    $signUpForm->password,
+                    $signUpForm->departmentId,
+                );
+                $this->signUpService->signUp($signUpDto, $signUpDto->getDepartmentId());
+                Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+                $transaction->commit();
+                return $this->goHome();
+            }
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            throw new ServerErrorHttpException($e->getMessage());
         }
 
         return $this->render('signup', [
-            'model' => $model,
+            'departmentList' => $departmentList,
+            'model' => $signUpForm,
         ]);
     }
 

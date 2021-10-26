@@ -16,7 +16,7 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Employee',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
@@ -42,7 +42,24 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => true,
             'rules' => [
-                '/' => 'site/index'
+                '/' => 'site/index',
+                'employee/index' => 'employee/index',
+                'employee/create' => 'employee/create',
+                'employee/update' => 'employee/update',
+                'employee/view' => 'employee/view',
+                'employee/delete' => 'employee/delete',
+
+                'site/login' => 'site/login',
+                'site/signup' => 'site/signup',
+                'site/logout'=> 'site/logout',
+
+                'department/index'=> 'department/index',
+                'department/create' => 'department/create',
+                'department/add' => 'department/add',
+                'department/remove' => 'department/remove',
+                'department/update' => 'department/update',
+                'department/view' => 'department/view',
+                'department/delete' => 'department/delete',
             ],
         ],
 
