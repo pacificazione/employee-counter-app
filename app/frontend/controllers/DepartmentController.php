@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Department;
 use common\models\DepartmentEmployeeControlForm;
+use common\models\repositories\DepartmentRepository;
 use common\models\repositories\EmployeeRepository;
 use common\models\search\DepartmentSearch;
 use common\models\services\DepartmentService;
@@ -24,23 +25,23 @@ class DepartmentController extends Controller
     private DepartmentService $departmentService;
     private EmployeeRepository $employeeRepository;
     private EmployeeService $employeeService;
-    /**
-     * @param DepartmentService $departmentService
-     */
+    private DepartmentRepository $departmentRepository;
+
     public function __construct(
         $id,
         $module,
         DepartmentService
         $departmentService,
         EmployeeRepository $employeeRepository,
-        EmployeeService $employeeService
-    ){
+        EmployeeService $employeeService,
+        DepartmentRepository $departmentRepository
+    ) {
         parent::__construct($id, $module);
         $this->departmentService = $departmentService;
         $this->employeeRepository = $employeeRepository;
+        $this->departmentRepository = $departmentRepository;
         $this->employeeService = $employeeService;
     }
-
 
     /**
      * @inheritDoc
@@ -160,7 +161,7 @@ class DepartmentController extends Controller
     public function actionView(int $id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->departmentRepository->find($id),
         ]);
     }
 
@@ -196,7 +197,7 @@ class DepartmentController extends Controller
      */
     public function actionUpdate(int $id)
     {
-        $model = $this->findModel($id);
+        $model = $this->departmentRepository->find($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id]);
@@ -214,6 +215,7 @@ class DepartmentController extends Controller
     public function actionDelete(int $departmentId)
     {
         $transaction = Yii::$app->db->beginTransaction();
+
         try {
             $this->departmentService->delete($departmentId);
             $transaction->commit();
@@ -223,22 +225,5 @@ class DepartmentController extends Controller
         }
 
         return $this->redirect(['index']);
-
-    }
-
-    /**
-     * Finds the Department model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Department the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Department::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

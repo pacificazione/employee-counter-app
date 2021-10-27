@@ -3,7 +3,6 @@
 namespace common\tests\unit\departmentService;
 
 use Codeception\Test\Unit;
-use common\models\Employee2Department;
 use common\models\repositories\DepartmentRepository;
 use common\models\repositories\Employee2DepartmentRepository;
 use common\models\repositories\EmployeeRepository;

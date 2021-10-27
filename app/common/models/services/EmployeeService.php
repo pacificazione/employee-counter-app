@@ -22,7 +22,6 @@ class EmployeeService
         $this->departmentRepository = $departmentRepository;
     }
 
-
     /**
      * @param int $id
      * @return EmployeeDto
@@ -31,7 +30,8 @@ class EmployeeService
     {
         $departmentList = $this->departmentRepository->getListByEmployeeId($id);
         $employee = $this->employeeRepository->findById($id);
-        if($employee === null){
+
+        if ($employee === null) {
             throw new NotFoundHttpException('Не удалось найти сотрудника.');
         }
 

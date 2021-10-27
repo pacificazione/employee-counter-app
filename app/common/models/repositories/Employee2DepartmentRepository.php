@@ -20,7 +20,7 @@ class Employee2DepartmentRepository
         $employee2department->employee_id = $employeeId;
         $employee2department->department_id = $departmentId;
 
-        if(!$employee2department->save()){
+        if (!$employee2department->save()) {
             throw new RuntimeException('Не удалось создать сотрудника.');
         }
     }

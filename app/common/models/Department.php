@@ -18,8 +18,6 @@ use yii\db\ActiveRecord;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Employee2department[] $employee2departments
- * @property Employee[] $employees
  */
 class Department extends ActiveRecord
 {
@@ -61,26 +59,6 @@ class Department extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'departmentName' => Yii::t('app', 'Название отдела'),
         ];
-    }
-
-    /**
-     * Gets query for [[Employee2departments]].
-     *
-     * @return ActiveQuery|Employee2departmentQuery
-     */
-    public function getEmployee2department()
-    {
-        return $this->hasMany(Employee2department::class, ['department_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Employees]].
-     *
-     * @return ActiveQuery|EmployeeQuery
-     */
-    public function getEmployees()
-    {
-        return $this->hasMany(Employee::className(), ['id' => 'employee_id'])->viaTable('{{%employee2department}}', ['department_id' => 'id']);
     }
 
     /**

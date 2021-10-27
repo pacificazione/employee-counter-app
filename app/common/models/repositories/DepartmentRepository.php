@@ -6,6 +6,7 @@ use common\models\Department;
 use common\models\Employee2Department;
 use Exception;
 use RuntimeException;
+use yii\web\NotFoundHttpException;
 
 class DepartmentRepository
 {
@@ -33,6 +34,14 @@ class DepartmentRepository
     {
         $model = Department::findOne(['id' => $departmentId])
             ->delete();
+    }
 
+    public function find($id)
+    {
+        if (($model = Department::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('Страницы не существует.');
     }
 }

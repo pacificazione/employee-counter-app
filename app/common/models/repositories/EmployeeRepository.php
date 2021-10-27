@@ -13,12 +13,10 @@ use yii\base\Exception;
 class EmployeeRepository
 {
     /**
-     * Finds user by email
-     *
      * @param string $email
-     * @return Employee
+     * @return Employee|null
      */
-    public function findByEmail(string $email)
+    public function findByEmail(string $email): ?Employee
     {
         return Employee::findOne(['email' => $email, 'status' => Employee::STATUS_ACTIVE]);
     }
@@ -42,7 +40,7 @@ class EmployeeRepository
         $employee->password_hash = Yii::$app->security->generatePasswordHash($signUpDto->getPassword());
         $employee->auth_key = Yii::$app->security->generateRandomString(32);
 
-        if(!$employee->save()){
+        if (!$employee->save()) {
             throw new RuntimeException('Не удалось создать сотрудника.');
         }
 

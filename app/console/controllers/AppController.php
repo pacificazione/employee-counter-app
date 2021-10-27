@@ -6,6 +6,9 @@ use common\models\Employee;
 use Yii;
 use yii\console\Controller;
 
+/**
+ * Основной контроллер приложения.
+ */
 class AppController extends Controller
 {
     public function actionInit()

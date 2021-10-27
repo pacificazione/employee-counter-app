@@ -27,7 +27,7 @@ class SignUpDto
         string $email,
         string $password,
         int    $departmentId
-    ){
+    ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->education = $education;

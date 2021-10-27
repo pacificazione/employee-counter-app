@@ -13,22 +13,26 @@ class EmployeeDto
     private string $post;
     private int $age;
     private string $nationality;
+    /**
+     * @var Department[]
+     */
     private array  $departmentList;
     private int $employeeId;
 
     /**
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $email
-     * @param string $education
-     * @param string $post
-     * @param int $age
-     * @param string $nationality
      * @param Department[] $departmentList
-     * @param int $employeeId
      */
-    public function __construct(string $firstName, string $lastName, string $email, string $education, string $post, int $age, string $nationality, array $departmentList, int $employeeId)
-    {
+    public function __construct(
+        string $firstName,
+        string $lastName,
+        string $email,
+        string $education,
+        string $post,
+        int $age,
+        string $nationality,
+        array $departmentList,
+        int $employeeId
+    ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
@@ -97,7 +101,7 @@ class EmployeeDto
     }
 
     /**
-     * @return array
+     * @return Department[]
      */
     public function getDepartmentList(): array
     {

@@ -139,7 +139,7 @@ class EmployeeController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = $this->employeeRepository->findById($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->id]);
@@ -171,21 +171,5 @@ class EmployeeController extends Controller
         }
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Employee model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Employee the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Employee::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

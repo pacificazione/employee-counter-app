@@ -28,7 +28,7 @@ class SignUpForm extends Model
             [['age', 'departmentId'], 'integer'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\Employee', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\Employee', 'message' => 'Введенная почта уже занята.'],
         ];
     }
 }

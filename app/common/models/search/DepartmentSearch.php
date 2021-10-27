@@ -7,7 +7,7 @@ use yii\data\ActiveDataProvider;
 use common\models\Department;
 
 /**
- * Search-модель отдела..
+ * Search-модель отдела.
  */
 class DepartmentSearch extends Department
 {

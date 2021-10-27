@@ -40,7 +40,7 @@ AppAsset::register($this);
         ['label' => 'Отделы', 'url' => ['/department/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
+        $menuItems[] = ['label' => 'Регистрация сотрудника', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Авторизация', 'url' => ['/site/login']];
     } else {
         $menuItems[] = '<li>'
