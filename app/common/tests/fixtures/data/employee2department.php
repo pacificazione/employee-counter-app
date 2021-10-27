@@ -27,4 +27,8 @@ return [
         'employee_id' => 6,
         'department_id' => 3,
     ],
+    'employee2department-6-3' => [
+        'employee_id' => 6,
+        'department_id' => 2,
+    ],
 ];
