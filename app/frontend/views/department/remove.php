@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Удаление сотрудни�
 ?>
 
 <div class="department-add-employee">
-    <h2>Добавление сотрудника в отдел</h2>
+    <h2>Удаление сотрудника из отдела</h2>
     <?php $form = ActiveForm::begin();?>
 
     <?= $form->field($employeeForm, 'email')->textInput(['maxlength' => true]) ?>
