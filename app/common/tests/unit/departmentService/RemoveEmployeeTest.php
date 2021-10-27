@@ -29,29 +29,6 @@ class RemoveEmployeeTest extends Unit
         );
     }
 
-    public function testRemoveSuccess(): void
-    {
-        $this->tester->haveFixtures([
-            'common\tests\fixtures\DepartmentFixture',
-            'common\tests\fixtures\EmployeeFixture',
-            'common\tests\fixtures\Employee2DepartmentFixture',
-        ]);
-
-        $this->tester->haveRecord(Employee2Department::class, [
-            'department_id' => 2,
-            'employee_id' => 2,
-            'created_at' => time(),
-            'updated_at' => time(),
-        ]);
-
-        $this->service->removeEmployee(1, 2);
-
-        $this->tester->seeRecord(Employee2Department::class, [
-            'department_id' => 1,
-            'employee_id' => 2,
-        ]);
-    }
-
     public function testRemoveWhenEmployeeHaveOnlyOneDepartmentFail(): void
     {
         $this->tester->haveFixtures([
