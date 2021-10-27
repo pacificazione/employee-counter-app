@@ -33,8 +33,8 @@ class DepartmentService
      */
     public function delete(int $departmentId): void
     {
-        $this->departmentRepository->delete($departmentId);
         $this->employee2DepartmentRepository->deleteAllEmployeesFromDepartment($departmentId);
+        $this->departmentRepository->delete($departmentId);
     }
 
     /**

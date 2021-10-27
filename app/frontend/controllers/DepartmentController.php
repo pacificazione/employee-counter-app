@@ -16,7 +16,7 @@ use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UnprocessableEntityHttpException;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Контроллер отдела.
@@ -210,8 +210,9 @@ class DepartmentController extends Controller
     }
 
     /**
+     * @param int $departmentId
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws ServerErrorHttpException
      */
     public function actionDelete(int $departmentId)
     {
@@ -222,7 +223,7 @@ class DepartmentController extends Controller
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollBack();
-            throw new NotFoundHttpException($e->getMessage());
+            throw new ServerErrorHttpException($e->getMessage());
         }
 
         return $this->redirect(['index']);
