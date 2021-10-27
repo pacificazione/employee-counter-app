@@ -16,6 +16,7 @@ use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UnprocessableEntityHttpException;
 
 /**
  * Контроллер отдела.
@@ -142,8 +143,8 @@ class DepartmentController extends Controller
 
                 return $this->redirect(['department/view', 'id' => $departmentId]);
             }
-        } catch (Exception $e) {
-            throw new NotFoundHttpException($e);
+        } catch (RuntimeException $e) {
+            $employeeForm->addError('email', $e->getMessage());
         }
 
         return $this->render('remove', [
