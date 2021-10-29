@@ -176,7 +176,7 @@ class SiteController extends Controller
                 );
 
                 $this->signUpService->signUp($signUpDto, $signUpDto->getDepartmentId());
-                Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+                Yii::$app->session->setFlash('success', 'Регистрация прошла успешно.');
                 $transaction->commit();
 
                 return $this->goHome();

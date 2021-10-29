@@ -88,6 +88,14 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/bower-asset/bootstrap-multiselect" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/bower-asset/bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/bower-asset/multiselect" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/yiisoft/yii2-bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/2amigos/yii2-multi-select-widget" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/kartik-v/yii2-krajee-base" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/kartik-v/yii2-widget-select2" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/select2/select2" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

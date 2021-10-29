@@ -45,6 +45,11 @@ class DepartmentService
         $this->employee2DepartmentRepository->create($employeeId, $departmentId);
     }
 
+    public function addEmployee2MultipleDepartments(array $departmentIds, int $employeeId):void
+    {
+        $this->employee2DepartmentRepository->add($employeeId, $departmentIds);
+    }
+
     /**
      * @throws Exception
      */

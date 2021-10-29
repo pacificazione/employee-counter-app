@@ -21,23 +21,23 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-                <?= $form->field($model, 'firstName')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'firstName')->textInput(['maxlength' => true])->label('Имя') ?>
 
-                <?= $form->field($model, 'lastName')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'lastName')->textInput(['maxlength' => true])->label('Фамилия') ?>
 
-                <?= $form->field($model, 'departmentId')->dropDownList([0 => 'Выбрать'] + $departmentList)  ?>
+                <?= $form->field($model, 'departmentId')->dropDownList([0 => 'Выбрать'] + $departmentList)->label('Отдел')  ?>
 
-                <?= $form->field($model, 'education')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'education')->textInput(['maxlength' => true])->label('Образование') ?>
 
-                <?= $form->field($model, 'post')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'post')->textInput(['maxlength' => true])->label('Должность') ?>
 
-                <?= $form->field($model, 'age')->textInput() ?>
+                <?= $form->field($model, 'age')->textInput()->label('Возраст') ?>
 
-                <?= $form->field($model, 'nationality')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'nationality')->textInput(['maxlength' => true])->label('Национальность') ?>
 
-                <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'email')->textInput(['autofocus' => true])->label('Почта') ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password')->passwordInput()->label('Пароль') ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>

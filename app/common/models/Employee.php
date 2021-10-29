@@ -91,7 +91,7 @@ class Employee extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
             [['firstName', 'lastName', 'education', 'post', 'nationality'], 'string', 'max' => 255],
-            [['age'], 'integer'],
+            [['age'], 'integer', 'min' => 14],
             [['auth_key'], 'string', 'max' => 32],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],

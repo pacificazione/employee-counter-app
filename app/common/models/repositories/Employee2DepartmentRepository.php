@@ -2,10 +2,10 @@
 
 namespace common\models\repositories;
 
-use common\models\Employee;
 use common\models\Employee2Department;
 use Exception;
 use RuntimeException;
+use Yii;
 
 class Employee2DepartmentRepository
 {
@@ -24,6 +24,33 @@ class Employee2DepartmentRepository
             throw new RuntimeException('Не удалось создать сотрудника.');
         }
     }
+
+    /**
+     * @param int $employeeId
+     * @param int[] $departmentIds
+     * @return void
+     * @throws \yii\db\Exception
+     */
+    public function add(int $employeeId, array $departmentIds): void
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        foreach ($departmentIds as $id) {
+
+           $employee2Department = new Employee2Department();
+
+           $employee2Department->department_id = $id;
+           $employee2Department->employee_id = $employeeId;
+
+           if (!$employee2Department->save()) {
+               $transaction->rollBack();
+               throw new RuntimeException('Не удалось добавить сотрудника в отделы.');
+           }
+        }
+
+        $transaction->commit();
+    }
+
 
     /**
      * @throws \Throwable

@@ -49,6 +49,7 @@ return [
                 'employee/update' => 'employee/update',
                 'employee/view' => 'employee/view',
                 'employee/delete' => 'employee/delete',
+                'employee/add' => 'employee/add',
 
                 'site/login' => 'site/login',
                 'site/signup' => 'site/signup',

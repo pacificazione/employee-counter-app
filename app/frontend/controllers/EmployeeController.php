@@ -2,10 +2,13 @@
 
 namespace frontend\controllers;
 
+
 use common\models\Employee;
+use common\models\EmployeeDepartmentForm;
 use common\models\EmployeeFilterForm;
 use common\models\repositories\DepartmentRepository;
 use common\models\repositories\EmployeeRepository;
+use common\models\services\DepartmentService;
 use common\models\services\EmployeeFilterDto;
 use common\models\services\EmployeeService;
 use Exception;
@@ -14,6 +17,7 @@ use Yii;
 use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\ServerErrorHttpException;
@@ -25,6 +29,7 @@ class EmployeeController extends Controller
 {
     private DepartmentRepository $departmentRepository;
     private EmployeeService $employeeService;
+    private DepartmentService $departmentService;
     private EmployeeRepository $employeeRepository;
 
     /**
@@ -37,9 +42,11 @@ class EmployeeController extends Controller
         $module,
         EmployeeService $employeeService,
         DepartmentRepository $departmentRepository,
-        EmployeeRepository $employeeRepository
+        EmployeeRepository $employeeRepository,
+        DepartmentService $departmentService
     ) {
         parent::__construct($id, $module);
+        $this->departmentService = $departmentService;
         $this->employeeService = $employeeService;
         $this->departmentRepository = $departmentRepository;
         $this->employeeRepository = $employeeRepository;
@@ -93,6 +100,46 @@ class EmployeeController extends Controller
         ]);
     }
 
+    /**
+     * Добавление сотрудника в отделы.
+     *
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     */
+    public function actionAdd()
+    {
+        $employeeForm = new EmployeeDepartmentForm();
+        $params = Yii::$app->request->post();
+
+        $departmentList = ArrayHelper::map($this->departmentRepository->getList(), 'id', 'departmentName');
+
+        try {
+            if ($employeeForm->load($params) && $employeeForm->validate()) {
+                $employee = $this->employeeRepository->findByEmail($employeeForm->email);
+
+                if ($employee === null) {
+                    $employeeForm->addError('email', 'Сотрудник с указанной почтой не найден.');
+
+                    return $this->render('add', [
+                        'departmentList' => $departmentList,
+                        'employeeForm' => $employeeForm,
+                    ]);
+                }
+
+                $this->departmentService->addEmployee2MultipleDepartments($employeeForm->departmentIds, $employee->id);
+
+                return $this->redirect(['employee/view', 'id' => $employee->id]);
+            }
+        } catch (RuntimeException $exception) {
+            $employeeForm->addError('departmentIds', 'Сотрудник уже находится в этом отделе.');
+        }
+
+        return $this->render('add', [
+            'departmentList' => $departmentList,
+            'employeeForm' => $employeeForm,
+        ]);
+    }
     /**
      * Displays a single Employee model.
      * @param int $id ID

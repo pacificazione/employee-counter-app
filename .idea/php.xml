@@ -88,6 +88,14 @@
       <path value="$PROJECT_DIR$/app/vendor/phar-io/version" />
       <path value="$PROJECT_DIR$/app/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/app/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/app/vendor/bower-asset/bootstrap-multiselect" />
+      <path value="$PROJECT_DIR$/app/vendor/bower-asset/bootstrap" />
+      <path value="$PROJECT_DIR$/app/vendor/bower-asset/multiselect" />
+      <path value="$PROJECT_DIR$/app/vendor/yiisoft/yii2-bootstrap" />
+      <path value="$PROJECT_DIR$/app/vendor/2amigos/yii2-multi-select-widget" />
+      <path value="$PROJECT_DIR$/app/vendor/kartik-v/yii2-krajee-base" />
+      <path value="$PROJECT_DIR$/app/vendor/kartik-v/yii2-widget-select2" />
+      <path value="$PROJECT_DIR$/app/vendor/select2/select2" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4">
