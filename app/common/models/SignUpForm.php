@@ -26,6 +26,7 @@ class SignUpForm extends Model
             [['email', 'password', 'firstName', 'lastName', 'post', 'age'], 'required'],
             [['firstName', 'lastName', 'education', 'post', 'nationality'], 'string', 'max' => 255],
             [['age', 'departmentId'], 'integer'],
+            [['age'], 'integer', 'min' => 14],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\Employee', 'message' => 'Введенная почта уже занята.'],
