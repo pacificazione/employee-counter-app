@@ -135,6 +135,12 @@ class Employee2DepartmentRepository
             ->andWhere(['employee_id' => $employeeId])
             ->all();
 
+        $departmentCount = count($departmentIdList);
+
+        if ($departmentCount < 1) {
+            throw new RuntimeException("Не удалось удалить сотрудника, он принадлежит только этому отделу!");
+        }
+
         foreach ($employee2Department as $e2d) {
             $e2d->delete();
         }

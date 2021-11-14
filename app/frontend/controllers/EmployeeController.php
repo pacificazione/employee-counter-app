@@ -206,29 +206,33 @@ class EmployeeController extends Controller
         );
         $employeeForm->departmentIdList = $employeeDepartmentIdList;
 
-        if ($this->request->isPost && $employeeForm->load($this->request->post()) && $employeeForm->validate()) {
-            $employeeDto = new EmployeeDto(
-                $employeeForm->firstName,
-                $employeeForm->lastName,
-                $employeeForm->email,
-                $employeeForm->education,
-                $employeeForm->post,
-                $employeeForm->age,
-                $employeeForm->nationality,
-            );
+        try {
 
-            $transaction = Yii::$app->db->beginTransaction();
+            if ($this->request->isPost && $employeeForm->load($this->request->post()) && $employeeForm->validate()) {
+                $employeeDto = new EmployeeDto(
+                    $employeeForm->firstName,
+                    $employeeForm->lastName,
+                    $employeeForm->email,
+                    $employeeForm->education,
+                    $employeeForm->post,
+                    $employeeForm->age,
+                    $employeeForm->nationality,
+                );
 
-            try {
-                $this->employeeService->save($employeeDto, $employeeForm->departmentIdList, $id);
-            } catch (\Throwable $exception) {
-                $transaction->rollBack();
-                throw new ServerErrorHttpException($exception->getMessage());
+                $transaction = Yii::$app->db->beginTransaction();
+
+                $this->employeeService->save($employeeDto, $employeeForm->getDepartmentIdList(), $id);
+
+                $transaction->commit();
+
+                return $this->redirect(['index', 'id' => $model->id]);
             }
-
-            $transaction->commit();
-
-            return $this->redirect(['index', 'id' => $model->id]);
+        } catch (\RuntimeException $exception) {
+            $transaction->rollBack();
+            $employeeForm->addError('departmentIdList', 'Сотрудник обязательно должен быть хотя бы в одном отделе.');
+        } catch (\Throwable $exception) {
+            $transaction->rollBack();
+            throw new ServerErrorHttpException($exception->getMessage());
         }
 
         return $this->render('update', [

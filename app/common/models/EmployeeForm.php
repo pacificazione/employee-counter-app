@@ -21,4 +21,9 @@ class EmployeeForm extends Employee
             ['departmentIdList', 'each', 'rule' => ['integer']],
         ];
     }
+
+    public function getDepartmentIdList(): array
+    {
+        return empty($this->departmentIdList) ? [] : $this->departmentIdList;
+    }
 }
