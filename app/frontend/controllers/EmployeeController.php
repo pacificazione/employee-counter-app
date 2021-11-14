@@ -4,11 +4,15 @@ namespace frontend\controllers;
 
 
 use common\models\Employee;
+use common\models\Employee2Department;
 use common\models\EmployeeDepartmentForm;
 use common\models\EmployeeFilterForm;
+use common\models\EmployeeForm;
 use common\models\repositories\DepartmentRepository;
+use common\models\repositories\Employee2DepartmentRepository;
 use common\models\repositories\EmployeeRepository;
 use common\models\services\DepartmentService;
+use common\models\services\EmployeeDto;
 use common\models\services\EmployeeFilterDto;
 use common\models\services\EmployeeService;
 use Exception;
@@ -31,11 +35,16 @@ class EmployeeController extends Controller
     private EmployeeService $employeeService;
     private DepartmentService $departmentService;
     private EmployeeRepository $employeeRepository;
+    private Employee2DepartmentRepository $employee2DepartmentRepository;
 
     /**
      * @param $id
      * @param $module
      * @param EmployeeService $employeeService
+     * @param DepartmentRepository $departmentRepository
+     * @param EmployeeRepository $employeeRepository
+     * @param DepartmentService $departmentService
+     * @param Employee2DepartmentRepository $employee2DepartmentRepository
      */
     public function __construct(
         $id,
@@ -43,13 +52,15 @@ class EmployeeController extends Controller
         EmployeeService $employeeService,
         DepartmentRepository $departmentRepository,
         EmployeeRepository $employeeRepository,
-        DepartmentService $departmentService
+        DepartmentService $departmentService,
+        Employee2DepartmentRepository $employee2DepartmentRepository
     ) {
         parent::__construct($id, $module);
         $this->departmentService = $departmentService;
         $this->employeeService = $employeeService;
         $this->departmentRepository = $departmentRepository;
         $this->employeeRepository = $employeeRepository;
+        $this->employee2DepartmentRepository = $employee2DepartmentRepository;
     }
 
     /**
@@ -187,13 +198,43 @@ class EmployeeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->employeeRepository->findById($id);
+        $employeeForm = new EmployeeForm($model);
+        $departmentList = ArrayHelper::map($this->departmentRepository->getList(), 'id', 'departmentName');
+        $employeeDepartmentIdList = array_map(function (Employee2Department $employee2Department) {
+                return $employee2Department->department_id;
+            }, $this->employee2DepartmentRepository->getByEmployeeId($id)
+        );
+        $employeeForm->departmentIdList = $employeeDepartmentIdList;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $employeeForm->load($this->request->post()) && $employeeForm->validate()) {
+            $employeeDto = new EmployeeDto(
+                $employeeForm->firstName,
+                $employeeForm->lastName,
+                $employeeForm->email,
+                $employeeForm->education,
+                $employeeForm->post,
+                $employeeForm->age,
+                $employeeForm->nationality,
+            );
+
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try {
+                $this->employeeService->save($employeeDto, $employeeForm->departmentIdList, $id);
+            } catch (\Throwable $exception) {
+                $transaction->rollBack();
+                throw new ServerErrorHttpException($exception->getMessage());
+            }
+
+            $transaction->commit();
+
             return $this->redirect(['index', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'employeeDepartmentIdList' => $employeeDepartmentIdList,
+            'employeeForm' => $employeeForm,
+            'departmentList' => $departmentList,
         ]);
     }
 

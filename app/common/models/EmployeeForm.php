@@ -2,20 +2,9 @@
 
 namespace common\models;
 
-use yii\base\Model;
-
-class EmployeeForm extends Model
+class EmployeeForm extends Employee
 {
-    public $firstName;
-    public $lastName;
-    public $education;
-    public $post;
-    public $age;
-    public $nationality;
-    public $email;
-    public $departmentId;
-    public $employeeId;
-    public $departmentName;
+    public $departmentIdList;
 
     /**
      * {@inheritdoc}
@@ -23,11 +12,13 @@ class EmployeeForm extends Model
     public function rules()
     {
         return [
-            [['email', 'password', 'firstName', 'lastName', 'post', 'age', 'departmentName'], 'required'],
-            [['firstName', 'lastName', 'education', 'post', 'nationality', 'departmentName'], 'string', 'max' => 255],
-            [['age', 'departmentId', 'employeeId'], 'integer'],
+            [['firstName', 'lastName', 'post', 'age', 'status'], 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['firstName', 'lastName', 'education', 'post', 'nationality'], 'string', 'max' => 255],
+            [['age'], 'integer', 'min' => 14],
+            ['departmentIdList', 'each', 'rule' => ['integer']],
         ];
     }
 }

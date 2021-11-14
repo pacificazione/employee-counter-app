@@ -4,6 +4,7 @@ namespace common\models\repositories;
 
 use common\models\Employee;
 use common\models\Employee2Department;
+use common\models\services\EmployeeDto;
 use common\models\services\EmployeeFilterDto;
 use common\models\services\SignUpDto;
 use RuntimeException;
@@ -91,4 +92,22 @@ class EmployeeRepository
         return $query->one();
     }
 
+    public function update(int $id, EmployeeDto $employeeDto)
+    {
+        $employee = $this->findById($id);
+
+        $employee->firstName = $employeeDto->getFirstName();
+        $employee->lastName = $employeeDto->getLastName();
+        $employee->education = $employeeDto->getEducation();
+        $employee->post = $employeeDto->getPost();
+        $employee->age = $employeeDto->getAge();
+        $employee->nationality = $employeeDto->getNationality();
+        $employee->email = $employeeDto->getEmail();
+
+        if (!$employee->save()) {
+            throw new RuntimeException('Не удалось сохранить сотрудника.');
+        }
+
+        return $employee->id;
+    }
 }

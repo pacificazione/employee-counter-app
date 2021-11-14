@@ -117,4 +117,34 @@ class Employee2DepartmentRepository
 
         $model->delete();
     }
+
+    /**
+     * @param int $employeeId
+     * @return Employee2Department[]
+     */
+    public function getByEmployeeId(int $employeeId): array
+    {
+        return Employee2Department::find()
+            ->andWhere(['employee_id' => $employeeId])
+            ->all();
+    }
+
+    public function update(int $employeeId, array $departmentIdList)
+    {
+        $employee2Department = Employee2Department::find()
+            ->andWhere(['employee_id' => $employeeId])
+            ->all();
+
+        foreach ($employee2Department as $e2d) {
+            $e2d->delete();
+        }
+
+        foreach ($departmentIdList as $departmentId) {
+            $employee2Department = new Employee2Department();
+            $employee2Department->employee_id = $employeeId;
+            $employee2Department->department_id = $departmentId;
+
+            $employee2Department->save();
+        }
+    }
 }

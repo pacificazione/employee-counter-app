@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="form-group">
         <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Сбросить', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::a('Сбросить', ['index'], ['class' => 'btn btn-danger']) ?>
         <?= Html::a('Добавить сотрудника в отделы', ['add'], ['class' => 'btn btn-primary']) ?>
     </div>
 

@@ -17,7 +17,7 @@ class EmployeeDto
      * @var Department[]
      */
     private array  $departmentList;
-    private int $employeeId;
+    private ?int $employeeId;
 
     /**
      * @param Department[] $departmentList
@@ -30,8 +30,8 @@ class EmployeeDto
         string $post,
         int $age,
         string $nationality,
-        array $departmentList,
-        int $employeeId
+        array $departmentList = [],
+        ?int $employeeId = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
